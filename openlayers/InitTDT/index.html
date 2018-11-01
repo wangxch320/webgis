@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天地图调用demo</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/ol/ol.css">
+</head>
+<body>
+<div id="map"></div>
+<script type="text/javascript" src="./js/ol3/ol.js"></script>
+<script type="text/javascript">
+    InitMap();
+
+    /**
+     * 添加天地图
+     * author:wangxch
+     * origin:青海多美生态环保科技有限公司
+     * @constructor
+     */
+    function InitMap(){
+        projection = new ol.proj.Projection({
+            code: 'EPSG:4326',
+            extent: [-180, -90, 180, 90]
+        });
+
+        view = new ol.View({
+            center: [100.1634, 36.90758],
+            projection: projection,
+            minZoom: 1,
+            maxZoom: 18,
+            zoom: 10
+        });
+
+        var controls = ol.control.defaults({
+            attribution: false,
+            rotate: false,
+            zoom: false
+        });
+
+        var imageBaseLayers = initImgtorBaseLayers(projection, true);
+
+        map = new ol.Map({
+            target: "map",
+            logo: false,
+            controls: controls,
+            layers: new Array().concat(imageBaseLayers),
+            view: view
+        });
+
+        function initImgtorBaseLayers(projection, visible) {
+            var vectorBaseLayers = [
+                new ol.layer.Tile({
+                    id: "img_c",
+                    source: new ol.source.XYZ({
+                        url: 'http://t{0-7}.tianditu.com/DataServer?T=img_c&x={x}&y={y}&l={z}',
+                        projection: projection
+                    }),
+                    visible: visible
+                }),
+                new ol.layer.Tile({
+                    id: "cia_c",
+                    source: new ol.source.XYZ({
+                        url: 'http://t{0-7}.tianditu.com/DataServer?T=cia_c&x={x}&y={y}&l={z}',
+                        projection: projection
+                    }),
+                    visible: visible
+                })
+            ];
+            return vectorBaseLayers;
+        }
+    }
+</script>
+</body>
+</html>
